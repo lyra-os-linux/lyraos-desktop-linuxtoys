@@ -1,0 +1,8 @@
+-------------------------------------------------------------------
+Mon Aug 17 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
+
+- Package upstream LinuxToys 6.6.2 from the fixed release tarball.
+- Disable curl-pipe-shell and git-pull self-update paths; updates are
+  delivered exclusively through Zypper and the signed Lyra OBS repository.
+- Remove upstream bytecode caches so the RPM is independent of the Python
+  minor version used to assemble the upstream archive.

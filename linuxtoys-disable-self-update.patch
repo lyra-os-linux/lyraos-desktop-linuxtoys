@@ -1,0 +1,63 @@
+--- a/usr/share/linuxtoys/app/updater/update_dialog.py
++++ b/usr/share/linuxtoys/app/updater/update_dialog.py
+@@ -130,40 +130,11 @@
+ 
+     def _run_process(self):
+         self.destroy()
+-        try:
+-            marker = "/tmp/.self_update_lt_complete"
+-            try:
+-                os.remove(marker)
+-            except FileNotFoundError:
+-                pass
+-
+-            with open("/tmp/.self_update_lt", "w") as f:
+-                script_content = f"""#!/bin/bash
+-source "$SCRIPT_DIR/libs/linuxtoys.bash"
+-sudo_rq
+-curl -fsSL https://linux.toys/install.sh | bash && touch {marker!r}
+-"""
+-                f.write(script_content)
+-
+-            os.chmod("/tmp/.self_update_lt", 0o700)
+-            GLib.timeout_add(500, self._restart_after_update)
+-
+-            self.parent.open_term_view(
+-                [
+-                    {
+-                        "icon": "linuxtoys.svg",
+-                        "name": "Update LinuxToys",
+-                        "description": "Update to new version of LinuxToys.",
+-                        "repo": "https://github.com/psygreg/linuxtoys/releases",
+-                        "path": "/tmp/.self_update_lt",
+-                        "self_update": True,
+-                        "is_script": True,
+-                        "auto_run": True,
+-                    }
+-                ]
+-            )
+-        except Exception as e:
+-            DialogError(self.parent, str(e)).show()
++        DialogError(
++            self.parent,
++            "LinuxToys is managed by Lyra OS. Install application updates "
++            "through the system updater or Zypper.",
++        ).show()
+ 
+     def _on_response(self, dialog, response_id):
+         if response_id == Gtk.ResponseType.OK:
+--- a/usr/share/linuxtoys/app/manifest_helper.py
++++ b/usr/share/linuxtoys/app/manifest_helper.py
+@@ -332,10 +332,8 @@
+                 resp = 'n'
+         
+         if resp == 'y':
+-            try:
+-                subprocess.run(['sh', '-c', 'curl -fsSL https://linux.toys/install.sh | bash'], check=True)
+-            except Exception as e:
+-                print(f"✗ An error occurred during the update process.\n{str(e)}")
++            print("LinuxToys is managed by Lyra OS. Install application updates "
++                  "through the system updater or Zypper.")
+     else:
+         print("✓ It's already on the latest available version.")
+     return update_available

@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "LinuxToys is managed by Lyra OS. Use the system updater or Zypper."
+exit 0
