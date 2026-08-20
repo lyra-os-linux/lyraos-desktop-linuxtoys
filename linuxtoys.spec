@@ -1,5 +1,5 @@
 Name:           linuxtoys
-Version:        6.6.2
+Version:        6.6.3
 Release:        0
 %global debug_package %{nil}
 Summary:        Graphical collection of tools for Linux
@@ -57,6 +57,8 @@ if grep -R -E 'curl[[:space:]]+-fsSL[[:space:]]+https://linux\.toys/install\.sh[
 fi
 test -x %{buildroot}%{_bindir}/linuxtoys
 test -f %{buildroot}%{_datadir}/applications/LinuxToys.desktop
+grep -qxF '__version__ = "%{version}"' \
+    %{buildroot}%{_datadir}/linuxtoys/app/updater/__init__.py
 bash -n %{buildroot}%{_bindir}/linuxtoys
 bash -n %{buildroot}%{_datadir}/linuxtoys/helpers/update_self.sh
 python3 -m compileall -q usr/share/linuxtoys

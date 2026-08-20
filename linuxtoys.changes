@@ -1,4 +1,17 @@
 -------------------------------------------------------------------
+Thu Aug 20 22:31:44 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
+
+- Update to upstream LinuxToys 6.6.3:
+  * Add VirtualBox to the Developers category.
+  * Improve hybrid-GPU feature compatibility handling.
+  * Improve Secure Boot module signing on Debian and Ubuntu.
+  * Fix v4l2loopback module signing on Fedora and RHEL.
+  * Deprecate the RTL88X2BU installer for kernels that provide the driver.
+  * Fix upstream issues #1075, #1076, #1085, and #1087.
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+- Fail the package check if the About version differs from the RPM version.
+
+-------------------------------------------------------------------
 Mon Aug 17 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
 
 - Package upstream LinuxToys 6.6.2 from the fixed release tarball.
