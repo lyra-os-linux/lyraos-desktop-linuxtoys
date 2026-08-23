@@ -1,0 +1,18 @@
+# LinuxToys packaging
+
+RPM packaging for [LinuxToys](https://linux.toys/), a third-party graphical
+collection of Linux tools and configuration helpers, repackaged for the
+signed Lyra OS OBS repositories.
+
+- `_service`: OBS source service that fetches and checksum-verifies the
+  upstream release tarball directly from GitHub;
+- `linuxtoys.spec`: builds the package from the upstream tree with no
+  compilation step, validates the desktop file, and fails the build if any
+  upstream self-update path (`curl | sh`, `git pull`) survives patching;
+- `linuxtoys-disable-self-update.patch` and `linuxtoys-update-self`: disable
+  LinuxToys' own updater so updates flow exclusively through Zypper and the
+  signed Lyra repository;
+- `linuxtoys.changes`: RPM changelog.
+
+This package is not Lyra-authored application code; it is packaging metadata
+only. Upstream license and source stay in the tarball fetched by `_service`.

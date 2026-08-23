@@ -1,0 +1,8 @@
+# RPM build artifacts
+*.rpm
+*.src.rpm
+*.tar.xz
+
+# Logs and temp files
+*.log
+.DS_Store
