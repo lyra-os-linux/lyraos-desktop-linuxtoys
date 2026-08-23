@@ -1,5 +1,5 @@
 -------------------------------------------------------------------
-Thu Aug 20 22:31:44 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
+Thu Aug 20 22:31:44 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.6.3:
   * Add VirtualBox to the Developers category.
@@ -12,7 +12,7 @@ Thu Aug 20 22:31:44 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
 - Fail the package check if the About version differs from the RPM version.
 
 -------------------------------------------------------------------
-Mon Aug 17 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@w3ti.com.br>
+Mon Aug 17 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Package upstream LinuxToys 6.6.2 from the fixed release tarball.
 - Disable curl-pipe-shell and git-pull self-update paths; updates are
