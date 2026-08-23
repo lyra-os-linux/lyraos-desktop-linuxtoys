@@ -16,3 +16,10 @@ signed Lyra OS OBS repositories.
 
 This package is not Lyra-authored application code; it is packaging metadata
 only. Upstream license and source stay in the tarball fetched by `_service`.
+
+## Credits
+
+LinuxToys is developed by [psygreg](https://github.com/psygreg) and made
+possible by its community of contributors. For the full list of authors and
+acknowledgements, see the upstream
+[Credits page](https://linux.toys/credits.html).
