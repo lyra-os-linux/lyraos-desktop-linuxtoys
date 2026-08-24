@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Mon Aug 24 17:10:45 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 6.6.5:
+  * Detect ROCm and Intel Compute Runtime hardware capabilities.
+  * Add native and hybrid-GPU DaVinci Resolve support on Arch Linux.
+  * Add Shader Booster support on Solus.
+  * Fix upstream issues #1089, #1100, #1104, #1111, #1113, #1118,
+    #1121, #1128, and #1130.
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Thu Aug 20 22:31:44 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.6.3:
