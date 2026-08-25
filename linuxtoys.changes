@@ -1,4 +1,18 @@
 -------------------------------------------------------------------
+Tue Aug 25 15:08:30 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 6.6.6:
+  * Fix update dialog not displaying correctly on startup when
+    fetching up-to-date scripts.
+  * Move Distrobox-Adv to the Office category.
+  * Add ReBAR capability check to AMD Radeon Drivers (#1146).
+  * Rework GRUB-btrfs to create OverlayFS hooks, fixing booting into
+    snapshots from the boot menu.
+  * Add suse_leap/suse_tumbleweed detection for targeted quirks.
+  * Fix upstream issues #1135, #1137, and #1144.
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Mon Aug 24 17:10:45 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.6.5:
