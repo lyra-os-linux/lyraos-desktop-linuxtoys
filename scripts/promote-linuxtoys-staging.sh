@@ -72,10 +72,12 @@ fi
 
 staging_rev="$revision"
 if [[ -z "$staging_rev" ]]; then
-    staging_rev=$(osc log "$STAGING_PRJ" "$PKG" | awk -F'|' '/^r[0-9]+ /{print $3; exit}' | xargs)
+    log_output=$(osc log "$STAGING_PRJ" "$PKG")
+    staging_rev=$(awk -F'|' '/^r[0-9]+ /{print $3; exit}' <<<"$log_output" | xargs)
 fi
 
-version=$(osc cat "$STAGING_PRJ" "$PKG" "linuxtoys.spec" | grep -m1 -E '^Version:' | awk '{print $2}')
+spec_output=$(osc cat "$STAGING_PRJ" "$PKG" "linuxtoys.spec")
+version=$(grep -m1 -E '^Version:' <<<"$spec_output" | awk '{print $2}')
 
 message="Promote linuxtoys from staging
 
