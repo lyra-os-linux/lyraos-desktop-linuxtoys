@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for LinuxToys upstream updates and publish to OBS staging if found
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+# Adjust this path if your checkout lives somewhere other than
+# ~/Git/Lyra/lyraos-desktop-linuxtoys.
+ExecStart=%h/Git/Lyra/lyraos-desktop-linuxtoys/scripts/auto-update-linuxtoys.sh
+Environment=AUTO_UPDATE_WORKDIR=%h/.cache/lyra-linuxtoys-auto-update
