@@ -1,4 +1,17 @@
 -------------------------------------------------------------------
+Tue Sep  1 17:31:42 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 6.7.1:
+  * UI/UX: improved Action Registry view and added registry search
+  * UI/UX: fixed removal button hover effect overlapping with button edges
+  * Removal of features can now be performed through CLI using linuxtoys -u
+  * More procedures now standardized through call_script
+  * call_script now checks for compatibility using script headers before
+    spawning the child script
+  * Fixed #1175, #1176, #1178, #1182, #1191, #1193
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Tue Aug 25 15:08:30 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.6.6:

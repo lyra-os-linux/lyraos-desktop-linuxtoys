@@ -89,7 +89,14 @@ checksum=$(sha256sum "$WORKDIR/$tarball" | awk '{print $1}')
 
 rm -rf "$WORKDIR/src" && mkdir -p "$WORKDIR/src"
 tar xf "$WORKDIR/$tarball" -C "$WORKDIR/src"
-if ! patch -p1 --dry-run -d "$WORKDIR/src" < "$REPO/linuxtoys-disable-self-update.patch" >/dev/null 2>&1; then
+source_root="$WORKDIR/src"
+mapfile -d '' source_entries < <(
+    find "$source_root" -mindepth 1 -maxdepth 1 -print0
+)
+if [[ "${#source_entries[@]}" -eq 1 && -d "${source_entries[0]}" ]]; then
+    source_root="${source_entries[0]}"
+fi
+if ! patch -p1 --dry-run -d "$source_root" < "$REPO/linuxtoys-disable-self-update.patch" >/dev/null 2>&1; then
     fail "self-update-disable patch no longer applies cleanly against ${latest_version}; needs manual rebasing, not auto-publishing this version"
 fi
 
