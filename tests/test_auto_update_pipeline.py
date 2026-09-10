@@ -5,6 +5,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tarfile
@@ -29,6 +30,13 @@ class PipelineTests(unittest.TestCase):
         self.git("init", "--bare", "--initial-branch=main", str(self.root / "origin.git"))
         seed = self.root / "seed"
         shutil.copytree(ROOT, seed, ignore=shutil.ignore_patterns(".git", "__pycache__"))
+        # Keep the simulated 6.7.1 -> 6.7.2 release independent of the real
+        # packaged version, so this suite continues exercising an update.
+        spec = seed / "linuxtoys.spec"
+        packaged_version = re.search(r"^Version:\s+(\S+)", spec.read_text(), re.M)[1]
+        spec.write_text(re.sub(r"^(Version:\s+).*", r"\g<1>6.7.1", spec.read_text(), flags=re.M))
+        service = seed / "_service"
+        service.write_text(service.read_text().replace(packaged_version, "6.7.1"))
         self.git("init", "--initial-branch=main", cwd=seed)
         self.git("config", "user.name", "Fixture", cwd=seed)
         self.git("config", "user.email", "fixture@example.invalid", cwd=seed)

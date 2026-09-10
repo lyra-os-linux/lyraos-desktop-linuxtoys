@@ -1,4 +1,31 @@
 -------------------------------------------------------------------
+Thu Sep 10 16:17:35 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 6.9:
+  * Added ROG Control Center to *Drivers*
+  * Added OpenLogi to *Peripherals*
+  * Added Marmalade to *Utils*
+  * Added Add Water to *Theming*
+  * *Audacity* installer now uses the official AppImage
+  * Repository lists now allow for systemd unit configuration, flatpak
+    permission overrides, pre/post installation scripts, and desktop
+    environment and container runtime compatibility filters
+  * Repository lists now allow multiple packages as main packages and
+    dependencies
+  * Icons and pre/post installation scripts can now be added to repository
+    lists within the p3/scripts/lists directory and subdirectories
+  * UI/UX: improved bug report dialog with option to report bugs to
+    officially supported apps
+  * Improved system context on bug reports
+  * Added special "official" search tag to look for apps with official
+    support for installation through LinuxToys
+  * Officially supported apps can now be tagged by reports from LinuxToys'
+    issue tracker
+  * Centralized new feature index
+  * Fixed #1213
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Tue Sep  1 17:31:42 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.7.1:
