@@ -20,3 +20,5 @@ jobs:
         env:
           PYTHONDONTWRITEBYTECODE: "1"
         run: python3 -m unittest discover -s tests -v
+      - name: Validate shell entry points
+        run: bash -n scripts/auto-update-linuxtoys.sh scripts/check-linuxtoys-update.sh scripts/promote-linuxtoys-staging.sh
