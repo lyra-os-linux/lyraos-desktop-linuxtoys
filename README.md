@@ -86,6 +86,37 @@ after losing the PR creation response, a second run exited successfully while
 staging retained the old version and the PR already claimed publication.
 The corrected launcher delivered the missing files once and then updated the PR.
 
+## Pinning a production promotion
+
+`scripts/promote-linuxtoys-staging.sh` resolves the selected staging revision
+to an immutable OBS source hash before reading the spec or asking for
+confirmation. The hash, OBS revision and package version appear in the review
+and request description. The spec read and `submitrequest -r` always use that
+hash, including when `--revision` was omitted or set to `latest`.
+
+`--diff` is read-only and shows the changes from production to the selected
+staging sources, with both sides pinned for that invocation. To use the same
+staging sources across a separate diff and promotion command, pass the source
+hash displayed by the diff as `--revision` to the promotion command. A later
+invocation without a revision selects the latest sources again.
+
+Numeric revisions, 32-character source hashes and `latest` are accepted.
+Failed metadata/spec reads, invalid hashes and missing/ambiguous RPM versions
+stop before submission. Canceling or closing input also prevents submission.
+`--accept` still requires `--yes`; it only accepts the ID from osc's explicit
+`created request id` line, ignoring numbers in warnings and URLs. If that line
+is missing or ambiguous, the created request is left for manual review.
+
+The promotion regression tests execute the shell script with an isolated osc
+fixture. They advance staging HEAD before the spec read and while the script
+waits for human confirmation, then verify that the submitted sources are still
+the reviewed revision. They also cover explicit revision/hash/latest, pinned
+diffs, cancellation, read failures, argument validation and request acceptance.
+The old script at `2fb9805` was reproduced showing source B while submitting C;
+the corrected script displays and submits B. These are CLI orchestration tests;
+they create no real OBS request, accept nothing in production and do not qualify
+package build or installation results.
+
 ## Credits
 
 LinuxToys is developed by [psygreg](https://github.com/psygreg) and made
