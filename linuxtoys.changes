@@ -1,4 +1,28 @@
 -------------------------------------------------------------------
+Fri Sep 18 18:42:26 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.1.6:
+  * 7.1.6: fixed #1312; dialogs about paru and Gear Lever requirements
+  * 7.1.5: fixed #1311
+  * 7.1.4: hardened feature repository checks, Volt icon, fixes for
+    pkg_fromfile, flatpak platform extensions, language change and URI
+    calls; fixed #1308, #1309
+  * 7.1.2: added R, Quarto and Volt; AnyDesk from official repository;
+    manifest export from the Action Registry; larger featured cards,
+    tables and code blocks on app pages; bug reports from outdated
+    versions blocked
+  * 7.0: new Media & Streaming category and App Pages; added Amethyst Mod
+    Manager, OpenBoardView, Thunderbird, Zotero, Texmaker, ZenNotes, Save
+    Desktop and Hardinfo2; BedrockOnLinux replaces Minecraft Bedrock
+    Launcher; several apps now installed from official AppImages/tarballs
+- Rebase linuxtoys-disable-self-update.patch; also disable the new
+  background automatic updater (run_background_update), which downloaded
+  and sourced https://linux.toys/install.sh.
+- %check now rejects any remaining reference to linux.toys/install.sh.
+- Install the update_self wrapper with install -D; upstream 7.x no longer
+  ships the helpers directory.
+
+-------------------------------------------------------------------
 Thu Sep 10 16:17:35 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 6.9:

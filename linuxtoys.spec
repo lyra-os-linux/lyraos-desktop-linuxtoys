@@ -1,5 +1,5 @@
 Name:           linuxtoys
-Version:        6.9
+Version:        7.1.6
 Release:        0
 %global debug_package %{nil}
 Summary:        Graphical collection of tools for Linux
@@ -43,14 +43,14 @@ signed Lyra repositories.
 %install
 mkdir -p %{buildroot}%{_prefix}
 cp -a usr/. %{buildroot}%{_prefix}/
-install -m 0755 %{SOURCE1} \
+install -D -m 0755 %{SOURCE1} \
     %{buildroot}%{_datadir}/linuxtoys/helpers/update_self.sh
 find %{buildroot} -type d -name __pycache__ -prune -exec rm -rf {} +
 find %{buildroot} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
 desktop-file-validate %{buildroot}%{_datadir}/applications/LinuxToys.desktop
 
 %check
-if grep -R -E 'curl[[:space:]]+-fsSL[[:space:]]+https://linux\.toys/install\.sh[[:space:]]*\|[[:space:]]*(ba)?sh|git[[:space:]]+pull' \
+if grep -R -E 'https://linux\.toys/install\.sh|git[[:space:]]+pull' \
     %{buildroot}%{_bindir}/linuxtoys %{buildroot}%{_datadir}/linuxtoys; then
     echo 'upstream self-update bypasses RPM ownership' >&2
     exit 1

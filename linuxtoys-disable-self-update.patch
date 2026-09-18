@@ -1,6 +1,21 @@
+--- a/usr/share/linuxtoys/app/manifest_helper.py
++++ b/usr/share/linuxtoys/app/manifest_helper.py
+@@ -544,10 +544,8 @@
+                 resp = 'n'
+         
+         if resp == 'y':
+-            try:
+-                subprocess.run(['sh', '-c', 'curl -fsSL https://linux.toys/install.sh | bash'], check=True)
+-            except Exception as e:
+-                print(f"✗ An error occurred during the update process.\n{str(e)}")
++            print("LinuxToys is managed by Lyra OS. Install application updates "
++                  "through the system updater or Zypper.")
+     else:
+         print("✓ It's already on the latest available version.")
+     return update_available
 --- a/usr/share/linuxtoys/app/updater/update_dialog.py
 +++ b/usr/share/linuxtoys/app/updater/update_dialog.py
-@@ -130,40 +130,11 @@
+@@ -135,47 +135,11 @@
  
      def _run_process(self):
          self.destroy()
@@ -13,8 +28,15 @@
 -
 -            with open("/tmp/.self_update_lt", "w") as f:
 -                script_content = f"""#!/bin/bash
--source "$SCRIPT_DIR/libs/linuxtoys.bash"
--sudo_rq
+-if [ -r /etc/os-release ]; then
+-    . /etc/os-release
+-fi
+-
+-if [ "${{ID:-}}" != "steamos" ]; then
+-    source "$SCRIPT_DIR/libs/linuxtoys.bash"
+-    sudo_rq
+-fi
+-
 -curl -fsSL https://linux.toys/install.sh | bash && touch {marker!r}
 -"""
 -                f.write(script_content)
@@ -46,18 +68,102 @@
  
      def _on_response(self, dialog, response_id):
          if response_id == Gtk.ResponseType.OK:
---- a/usr/share/linuxtoys/app/manifest_helper.py
-+++ b/usr/share/linuxtoys/app/manifest_helper.py
-@@ -332,10 +332,8 @@
-                 resp = 'n'
-         
-         if resp == 'y':
+--- a/usr/share/linuxtoys/app/updater/update_helper.py
++++ b/usr/share/linuxtoys/app/updater/update_helper.py
+@@ -212,92 +212,7 @@
+     the user-level AppImage/Gear Lever update path. Returns
+     (success, error_message).
+     """
+-    env = os.environ.copy()
+-    script_dir = os.environ.get("SCRIPT_DIR")
+-    env["LINUXTOYS_NONINTERACTIVE"] = "1"
+-
+-    is_steamos = False
+-    try:
+-        with open("/etc/os-release", "r", encoding="utf-8") as os_release:
+-            for line in os_release:
+-                if line.startswith("ID="):
+-                    os_id = line.split("=", 1)[1].strip().strip('\"\'')
+-                    is_steamos = os_id == "steamos"
+-                    break
+-    except OSError:
+-        pass
+-
+-    if is_steamos:
+-        script = (
+-            "#!/usr/bin/env bash\n"
+-            "curl -fsSL https://linux.toys/install.sh | bash\n"
+-        )
+-    else:
+-        if not script_dir:
+-            return False, "SCRIPT_DIR environment variable is not set."
+-
+-        library_path = os.path.join(script_dir, "libs", "linuxtoys.bash")
+-        if not os.path.isfile(library_path):
+-            return False, f"LinuxToys shell library was not found: {library_path}"
+-
+-        script = (
+-            "#!/usr/bin/env bash\n"
+-            f"source {shlex.quote(library_path)}\n"
+-            "sudo_rq\n"
+-            "\n"
+-            # Keep install.sh in the same shell that ran sudo_rq. In the\n"
+-            # background updater there is no controlling TTY, so spawning a\n"
+-            # separate `bash` via a pipe can make sudo's cached authorization\n"
+-            # unavailable to the installer.\n"
+-            "_lt_installer=$(mktemp \"${TMPDIR:-/tmp}/linuxtoys-installer.XXXXXX\") || exit 1\n"
+-            "trap 'rm -f -- \"$_lt_installer\"' EXIT\n"
+-            "curl -fsSL https://linux.toys/install.sh -o \"$_lt_installer\" || exit 1\n"
+-            "source \"$_lt_installer\"\n"
+-        )
+-
+-    script_path = None
+-    try:
+-        with tempfile.NamedTemporaryFile(
+-            mode="w",
+-            prefix="linuxtoys-background-update-",
+-            suffix=".sh",
+-            delete=False,
+-            encoding="utf-8",
+-        ) as tmp:
+-            tmp.write(script)
+-            script_path = tmp.name
+-
+-        os.chmod(script_path, 0o700)
+-
+-        result = subprocess.run(
+-            [
+-                "script",
+-                "-qefc",
+-                f"bash {shlex.quote(script_path)}",
+-                "/dev/null",
+-            ],
+-            stdout=subprocess.PIPE,
+-            stderr=subprocess.PIPE,
+-            text=True,
+-            env=env,
+-        )
+-
+-        if result.returncode == 0:
+-            return True, ""
+-
+-        if result.returncode == 100:
+-            return False, "Update authentication was cancelled."
+-
+-        error = (result.stderr or result.stdout or "").strip()
+-        if not error:
+-            error = f"Background updater exited with status {result.returncode}."
+-        return False, error
+-
+-    except Exception as exc:
+-        return False, str(exc)
+-    finally:
+-        if script_path:
 -            try:
--                subprocess.run(['sh', '-c', 'curl -fsSL https://linux.toys/install.sh | bash'], check=True)
--            except Exception as e:
--                print(f"✗ An error occurred during the update process.\n{str(e)}")
-+            print("LinuxToys is managed by Lyra OS. Install application updates "
-+                  "through the system updater or Zypper.")
-     else:
-         print("✓ It's already on the latest available version.")
-     return update_available
+-                os.remove(script_path)
+-            except OSError:
+-                pass
++    return False, (
++        "LinuxToys is managed by Lyra OS. Install application updates "
++        "through the system updater or Zypper."
++    )
