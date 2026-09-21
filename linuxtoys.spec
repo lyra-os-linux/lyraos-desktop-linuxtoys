@@ -1,5 +1,5 @@
 Name:           linuxtoys
-Version:        7.1.6
+Version:        7.2.4
 Release:        0
 %global debug_package %{nil}
 Summary:        Graphical collection of tools for Linux
@@ -11,6 +11,8 @@ Patch0:         linuxtoys-disable-self-update.patch
 BuildRequires:  desktop-file-utils
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  python3
+Requires:       AppStream
+Requires:       typelib-1_0-AppStream-1.0
 Requires:       bash
 Requires:       curl
 Requires:       git
@@ -20,6 +22,8 @@ Requires:       libvte-2_91-0
 Requires:       python3
 Requires:       python3-gobject
 Requires:       python3-requests
+Requires:       python3-urllib3
+Requires:       python3-certifi
 Requires:       sudo
 Requires:       typelib-1_0-Vte-2.91
 Requires:       wget

@@ -1,4 +1,19 @@
 -------------------------------------------------------------------
+Mon Sep 21 15:50:13 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.2.4:
+  * fix: loading screen message not displaying for initial appstream
+    catalog build as intended
+  * fix: some flathub entry names resolving incorrectly
+  * fix: queueing apps for installation or removal during another's
+    operation causing a PTY race
+  * fix: install and update on CachyOS
+  * fix: #1353
+- Add AppStream runtime and its openSUSE GI typelib for the native catalog.
+- Refresh the self-update patch for upstream askpass changes.
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Fri Sep 18 18:42:26 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 7.1.6:
