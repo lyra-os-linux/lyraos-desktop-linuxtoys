@@ -22,7 +22,7 @@ Requires:       libvte-2_91-0
 Requires:       python3
 Requires:       python3-gobject
 Requires:       python3-requests
-Requires:       python3-urllib3
+Requires:       python3dist(urllib3)
 Requires:       python3-certifi
 Requires:       sudo
 Requires:       typelib-1_0-Vte-2.91
@@ -49,6 +49,11 @@ mkdir -p %{buildroot}%{_prefix}
 cp -a usr/. %{buildroot}%{_prefix}/
 install -D -m 0755 %{SOURCE1} \
     %{buildroot}%{_datadir}/linuxtoys/helpers/update_self.sh
+# Normalize executable interpreters so RPM detects the real runtime dependency.
+find %{buildroot}%{_datadir}/linuxtoys -type f -name '*.sh' \
+    -exec sed -i '1s|^#!/usr/bin/env bash$|#!/bin/bash|' {} +
+sed -i '1s|^#!/usr/bin/env python3$|#!/usr/bin/python3|' \
+    %{buildroot}%{_datadir}/linuxtoys/linuxtoys.py
 find %{buildroot} -type d -name __pycache__ -prune -exec rm -rf {} +
 find %{buildroot} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
 desktop-file-validate %{buildroot}%{_datadir}/applications/LinuxToys.desktop
