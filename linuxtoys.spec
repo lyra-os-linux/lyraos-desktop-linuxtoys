@@ -91,6 +91,7 @@ python3 -m compileall -q usr/share/linuxtoys
 %{_bindir}/linuxtoys
 %{_datadir}/applications/LinuxToys.desktop
 %{_datadir}/icons/hicolor/*/apps/*
+%dir %{_libdir}/linuxtoys
 %{_libdir}/linuxtoys/*.so
 %exclude %{_datadir}/linuxtoys/LICENSE
 %{_datadir}/linuxtoys/

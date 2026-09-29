@@ -24,6 +24,7 @@ class LinuxtoysPackagingTests(unittest.TestCase):
     def test_bundled_native_libraries_are_installed_in_libdir(self) -> None:
         spec = (ROOT / "linuxtoys.spec").read_text(encoding="utf-8")
         self.assertIn("%{buildroot}%{_libdir}/linuxtoys", spec)
+        self.assertIn("%dir %{_libdir}/linuxtoys", spec)
         self.assertIn("%{_libdir}/linuxtoys/*.so", spec)
         self.assertIn("ln -s ../../../lib64/linuxtoys/$library", spec)
         self.assertNotIn("Requires:       libvte-2_91-0", spec)
