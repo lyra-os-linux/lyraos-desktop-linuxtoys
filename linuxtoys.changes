@@ -1,4 +1,19 @@
 -------------------------------------------------------------------
+Tue Sep 29 12:23:03 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.3.4:
+  * added TCP BBR to *Extras* and *Optimized Defaults*
+  * *OBS Studio* now obtained from appstream with custom overlay - the
+    enhancements you already know and love, now with the ability to add
+    extensions!
+  * in-category tabs now displayed at the bottom
+  * move in-category tabs to rust
+  * improve app launch time
+  * fix: better translation for category tabs
+  * fix: #1403
+- Keep upstream self-update paths disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Mon Sep 21 15:50:13 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 7.2.4:
