@@ -17,8 +17,6 @@ Requires:       bash
 Requires:       curl
 Requires:       git
 Requires:       gtk3
-Requires:       hicolor-icon-theme
-Requires:       libvte-2_91-0
 Requires:       python3
 Requires:       python3-gobject
 Requires:       python3-requests
@@ -30,6 +28,9 @@ Requires:       wget
 Requires:       xdg-utils
 Requires:       zenity
 ExclusiveArch:  x86_64
+
+# GTK/GObject resolves VTE through its typelib.
+# The upstream release bundles two architecture-specific Python/Rust libraries.
 
 %description
 LinuxToys presents a curated collection of Linux tools and configuration
@@ -54,12 +55,25 @@ find %{buildroot}%{_datadir}/linuxtoys -type f -name '*.sh' \
     -exec sed -i '1s|^#!/usr/bin/env bash$|#!/bin/bash|' {} +
 sed -i '1s|^#!/usr/bin/env python3$|#!/usr/bin/python3|' \
     %{buildroot}%{_datadir}/linuxtoys/linuxtoys.py
+# The upstream archive marks several import-only Python modules non-executable
+# despite their shebangs. Drop those shebangs to satisfy rpmlint.
+find %{buildroot}%{_datadir}/linuxtoys -type f -name '*.py' ! -perm /111 \
+    -exec sed -i '1{/^#!.*python3/d;}' {} +
+# Keep bundled ELF extensions in libdir; leave symlinks at their upstream
+# import paths so Python and the GUI loader continue to find them.
+install -d %{buildroot}%{_libdir}/linuxtoys
+for library in _catalog_rs.abi3.so liblinuxtoys_gui.so; do
+    mv %{buildroot}%{_datadir}/linuxtoys/app/$library \
+        %{buildroot}%{_libdir}/linuxtoys/$library
+    ln -s ../../../lib64/linuxtoys/$library \
+        %{buildroot}%{_datadir}/linuxtoys/app/$library
+done
 find %{buildroot} -type d -name __pycache__ -prune -exec rm -rf {} +
 find %{buildroot} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
 desktop-file-validate %{buildroot}%{_datadir}/applications/LinuxToys.desktop
 
 %check
-if grep -R -E 'https://linux\.toys/install\.sh|git[[:space:]]+pull' \
+if grep -R --exclude='*.so' -E 'https://linux\.toys/install\.sh|git[[:space:]]+pull' \
     %{buildroot}%{_bindir}/linuxtoys %{buildroot}%{_datadir}/linuxtoys; then
     echo 'upstream self-update bypasses RPM ownership' >&2
     exit 1
@@ -77,6 +91,7 @@ python3 -m compileall -q usr/share/linuxtoys
 %{_bindir}/linuxtoys
 %{_datadir}/applications/LinuxToys.desktop
 %{_datadir}/icons/hicolor/*/apps/*
+%{_libdir}/linuxtoys/*.so
 %exclude %{_datadir}/linuxtoys/LICENSE
 %{_datadir}/linuxtoys/
 

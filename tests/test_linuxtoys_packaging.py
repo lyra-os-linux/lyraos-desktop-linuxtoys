@@ -21,6 +21,14 @@ class LinuxtoysPackagingTests(unittest.TestCase):
         self.assertIn("upstream self-update bypasses RPM ownership", spec)
         self.assertIn("LinuxToys is managed by Lyra OS", patch)
 
+    def test_bundled_native_libraries_are_installed_in_libdir(self) -> None:
+        spec = (ROOT / "linuxtoys.spec").read_text(encoding="utf-8")
+        self.assertIn("%{buildroot}%{_libdir}/linuxtoys", spec)
+        self.assertIn("%{_libdir}/linuxtoys/*.so", spec)
+        self.assertIn("ln -s ../../../lib64/linuxtoys/$library", spec)
+        self.assertNotIn("Requires:       libvte-2_91-0", spec)
+        self.assertNotIn("Requires:       hicolor-icon-theme", spec)
+
     def test_auto_update_accepts_release_archives_with_a_top_level_directory(self) -> None:
         spec = importlib.util.spec_from_file_location("pipeline", ROOT / "scripts/auto_update_linuxtoys.py")
         pipeline = importlib.util.module_from_spec(spec)

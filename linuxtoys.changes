@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Sep 29 12:40:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Fix the Leap 16.1 rpmlint failure for LinuxToys 7.3.4.
+- Install bundled native extensions under /usr/lib64 and preserve their
+  upstream import paths with symlinks.
+- Remove redundant direct requirements and non-executable Python shebangs.
+
+-------------------------------------------------------------------
 Tue Sep 29 12:23:03 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 7.3.4:
