@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Nov  2 20:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Register LinuxToys only for RPM files and linuxtoys:// links. Drop
+  the upstream .deb, Flatpak, Snap, AppImage, Arch and Solus associations
+  from the desktop file and AppStream metainfo, and stop installing the
+  shared MIME definitions, which only declared the Arch and Solus types.
+
+-------------------------------------------------------------------
 Mon Nov  2 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Also drop `#!/usr/bin/env python` shebangs from non-executable Python

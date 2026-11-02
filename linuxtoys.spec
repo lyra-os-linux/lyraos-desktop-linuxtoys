@@ -71,9 +71,22 @@ for library in _catalog_rs.abi3.so liblinuxtoys_gui.so; do
 done
 find %{buildroot} -type d -name __pycache__ -prune -exec rm -rf {} +
 find %{buildroot} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+# On Lyra, LinuxToys opens only RPM files (and its own linuxtoys:// links):
+# .deb, Flatpak, Snap, AppImage, Arch and Solus packages keep their default
+# handlers. The shared MIME definitions only add the Arch and Solus types.
+desktop-file-edit --set-key=MimeType --set-value='x-scheme-handler/linuxtoys;application/x-rpm;' \
+    %{buildroot}%{_datadir}/applications/toys.linux.LinuxToys.desktop
+sed -i '/<mediatype>/{/application\/x-rpm</!d}' \
+    %{buildroot}%{_datadir}/metainfo/toys.linux.LinuxToys.metainfo.xml
+rm -r %{buildroot}%{_datadir}/mime
 desktop-file-validate %{buildroot}%{_datadir}/applications/toys.linux.LinuxToys.desktop
 
 %check
+grep -qxF 'MimeType=x-scheme-handler/linuxtoys;application/x-rpm;' \
+    %{buildroot}%{_datadir}/applications/toys.linux.LinuxToys.desktop
+test "$(grep -c '<mediatype>' %{buildroot}%{_datadir}/metainfo/toys.linux.LinuxToys.metainfo.xml)" = 1
+grep -qF '<mediatype>application/x-rpm</mediatype>' \
+    %{buildroot}%{_datadir}/metainfo/toys.linux.LinuxToys.metainfo.xml
 if grep -R --exclude='*.so' -E 'https://linux\.toys/install\.sh|git[[:space:]]+pull' \
     %{buildroot}%{_bindir}/linuxtoys %{buildroot}%{_datadir}/linuxtoys; then
     echo 'upstream self-update bypasses RPM ownership' >&2
@@ -93,7 +106,6 @@ python3 -m compileall -q usr/share/linuxtoys
 %{_datadir}/applications/toys.linux.LinuxToys.desktop
 %{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/metainfo/toys.linux.LinuxToys.metainfo.xml
-%{_datadir}/mime/packages/linuxtoys-mimetypes.xml
 %dir %{_libdir}/linuxtoys
 %{_libdir}/linuxtoys/*.so
 %exclude %{_datadir}/linuxtoys/LICENSE

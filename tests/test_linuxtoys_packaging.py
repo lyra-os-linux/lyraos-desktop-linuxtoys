@@ -21,6 +21,13 @@ class LinuxtoysPackagingTests(unittest.TestCase):
         self.assertIn("upstream self-update bypasses RPM ownership", spec)
         self.assertIn("LinuxToys is managed by Lyra OS", patch)
 
+    def test_only_rpm_files_are_associated_with_linuxtoys(self) -> None:
+        spec = (ROOT / "linuxtoys.spec").read_text(encoding="utf-8")
+        self.assertIn("--set-value='x-scheme-handler/linuxtoys;application/x-rpm;'", spec)
+        self.assertIn("'MimeType=x-scheme-handler/linuxtoys;application/x-rpm;'", spec)
+        self.assertIn("rm -r %{buildroot}%{_datadir}/mime", spec)
+        self.assertNotIn("%{_datadir}/mime/", spec.split("%files", 1)[1])
+
     def test_bundled_native_libraries_are_installed_in_libdir(self) -> None:
         spec = (ROOT / "linuxtoys.spec").read_text(encoding="utf-8")
         self.assertIn("%{buildroot}%{_libdir}/linuxtoys", spec)
