@@ -2,11 +2,11 @@
   <service name="download_url">
     <param name="protocol">https</param>
     <param name="host">github.com</param>
-    <param name="path">/psygreg/linuxtoys/releases/download/7.3.4/linuxtoys-7.3.4.tar.xz</param>
+    <param name="path">/psygreg/linuxtoys/releases/download/7.9.2/linuxtoys-7.9.2.tar.xz</param>
   </service>
   <service name="verify_file">
-    <param name="file">_service:download_url:linuxtoys-7.3.4.tar.xz</param>
+    <param name="file">_service:download_url:linuxtoys-7.9.2.tar.xz</param>
     <param name="verifier">sha256</param>
-    <param name="checksum">06fc365acd0bfcbd43410f769991e180682e0384d4980debd2444abd1c210e69</param>
+    <param name="checksum">dea2e5e86a4e3464ad917a62a9d929ba762bff093476ecb45ea19f483455faa3</param>
   </service>
 </services>

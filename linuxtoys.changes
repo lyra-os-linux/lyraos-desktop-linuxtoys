@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Mon Nov  2 12:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.9.2.
+- Follow the upstream desktop file rename to toys.linux.LinuxToys.desktop
+  and package the new AppStream metainfo and shared MIME definitions.
+- Rebase linuxtoys-disable-self-update.patch onto 7.9.2 and extend it to
+  the new terminal UI, whose update dialog also ran
+  `curl https://linux.toys/install.sh | bash`; it now points the user to
+  the system updater or Zypper instead.
+
+-------------------------------------------------------------------
 Tue Sep 29 12:40:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Fix the Leap 16.1 rpmlint failure for LinuxToys 7.3.4.

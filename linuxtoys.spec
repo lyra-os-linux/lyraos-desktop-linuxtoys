@@ -1,5 +1,5 @@
 Name:           linuxtoys
-Version:        7.3.4
+Version:        7.9.2
 Release:        0
 %global debug_package %{nil}
 Summary:        Graphical collection of tools for Linux
@@ -70,7 +70,7 @@ for library in _catalog_rs.abi3.so liblinuxtoys_gui.so; do
 done
 find %{buildroot} -type d -name __pycache__ -prune -exec rm -rf {} +
 find %{buildroot} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
-desktop-file-validate %{buildroot}%{_datadir}/applications/LinuxToys.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/toys.linux.LinuxToys.desktop
 
 %check
 if grep -R --exclude='*.so' -E 'https://linux\.toys/install\.sh|git[[:space:]]+pull' \
@@ -79,7 +79,7 @@ if grep -R --exclude='*.so' -E 'https://linux\.toys/install\.sh|git[[:space:]]+p
     exit 1
 fi
 test -x %{buildroot}%{_bindir}/linuxtoys
-test -f %{buildroot}%{_datadir}/applications/LinuxToys.desktop
+test -f %{buildroot}%{_datadir}/applications/toys.linux.LinuxToys.desktop
 grep -qxF '__version__ = "%{version}"' \
     %{buildroot}%{_datadir}/linuxtoys/app/updater/__init__.py
 bash -n %{buildroot}%{_bindir}/linuxtoys
@@ -89,8 +89,10 @@ python3 -m compileall -q usr/share/linuxtoys
 %files
 %license %{_datadir}/linuxtoys/LICENSE
 %{_bindir}/linuxtoys
-%{_datadir}/applications/LinuxToys.desktop
+%{_datadir}/applications/toys.linux.LinuxToys.desktop
 %{_datadir}/icons/hicolor/*/apps/*
+%{_datadir}/metainfo/toys.linux.LinuxToys.metainfo.xml
+%{_datadir}/mime/packages/linuxtoys-mimetypes.xml
 %dir %{_libdir}/linuxtoys
 %{_libdir}/linuxtoys/*.so
 %exclude %{_datadir}/linuxtoys/LICENSE
