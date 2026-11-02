@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  2 19:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Also drop `#!/usr/bin/env python` shebangs from non-executable Python
+  modules; the vendored markdown_it/cli/parse.py in 7.9.2 failed rpmlint
+  with non-executable-script.
+
+-------------------------------------------------------------------
 Mon Nov  2 12:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 7.9.2.

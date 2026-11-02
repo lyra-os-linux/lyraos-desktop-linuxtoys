@@ -56,9 +56,10 @@ find %{buildroot}%{_datadir}/linuxtoys -type f -name '*.sh' \
 sed -i '1s|^#!/usr/bin/env python3$|#!/usr/bin/python3|' \
     %{buildroot}%{_datadir}/linuxtoys/linuxtoys.py
 # The upstream archive marks several import-only Python modules non-executable
-# despite their shebangs. Drop those shebangs to satisfy rpmlint.
+# despite their python or python3 shebangs. Drop those shebangs to satisfy
+# rpmlint.
 find %{buildroot}%{_datadir}/linuxtoys -type f -name '*.py' ! -perm /111 \
-    -exec sed -i '1{/^#!.*python3/d;}' {} +
+    -exec sed -i '1{/^#!.*python/d;}' {} +
 # Keep bundled ELF extensions in libdir; leave symlinks at their upstream
 # import paths so Python and the GUI loader continue to find them.
 install -d %{buildroot}%{_libdir}/linuxtoys
