@@ -1,6 +1,8 @@
+diff --git a/usr/share/linuxtoys/app/manifest_helper.py b/usr/share/linuxtoys/app/manifest_helper.py
+index 0e0f9e7a..a4421f66 100644
 --- a/usr/share/linuxtoys/app/manifest_helper.py
 +++ b/usr/share/linuxtoys/app/manifest_helper.py
-@@ -544,10 +544,8 @@
+@@ -847,10 +847,8 @@ def run_update_check_cli(translations=None):
                  resp = 'n'
          
          if resp == 'y':
@@ -13,9 +15,30 @@
      else:
          print("✓ It's already on the latest available version.")
      return update_available
+diff --git a/usr/share/linuxtoys/app/tui/runner_helper.py b/usr/share/linuxtoys/app/tui/runner_helper.py
+index 4762b48f..4203475e 100644
+--- a/usr/share/linuxtoys/app/tui/runner_helper.py
++++ b/usr/share/linuxtoys/app/tui/runner_helper.py
+@@ -2537,11 +2537,9 @@ class UpdateRunnerMixin:
+         if not wants_update:
+             return
+ 
+-        self._running_is_update = True
+-        self._show_terminal()
+-        terminal = self.query_one("#terminal", Terminal)
+-        terminal.run_script(
+-            ["bash", "-c", "curl -fsSL https://linux.toys/install.sh | bash"]
++        self.notify(
++            "LinuxToys is managed by Lyra OS. Install application updates "
++            "through the system updater or Zypper."
+         )
+ 
+     def _finish_update_run(self, exit_code: int | None) -> None:
+diff --git a/usr/share/linuxtoys/app/updater/update_dialog.py b/usr/share/linuxtoys/app/updater/update_dialog.py
+index 13c3b723..53966cab 100644
 --- a/usr/share/linuxtoys/app/updater/update_dialog.py
 +++ b/usr/share/linuxtoys/app/updater/update_dialog.py
-@@ -135,47 +135,11 @@
+@@ -138,47 +138,11 @@ class UpdateDialog(Gtk.Dialog):
  
      def _run_process(self):
          self.destroy()
@@ -68,9 +91,11 @@
  
      def _on_response(self, dialog, response_id):
          if response_id == Gtk.ResponseType.OK:
+diff --git a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxtoys/app/updater/update_helper.py
+index 8ac9701b..44e6e2ca 100644
 --- a/usr/share/linuxtoys/app/updater/update_helper.py
 +++ b/usr/share/linuxtoys/app/updater/update_helper.py
-@@ -212,92 +212,7 @@
+@@ -232,92 +232,7 @@ def run_background_update():
      the user-level AppImage/Gear Lever update path. Returns
      (success, error_message).
      """
