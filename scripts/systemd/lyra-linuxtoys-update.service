@@ -5,7 +5,11 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-# Adjust this path if your checkout lives somewhere other than
-# ~/Git/Lyra/lyraos-desktop-linuxtoys.
-ExecStart=%h/Git/Lyra/lyraos-desktop-linuxtoys/scripts/auto-update-linuxtoys.sh
+# The checkout defaults to the maintainer workspace, ~/Git/LyraOS. To use
+# another path, set LINUXTOYS_CHECKOUT in
+# ~/.config/lyra-linuxtoys-update.env (optional file), e.g.:
+#   LINUXTOYS_CHECKOUT=/srv/src/lyraos-desktop-linuxtoys
+Environment=LINUXTOYS_CHECKOUT=%h/Git/LyraOS/lyraos-desktop-linuxtoys
+EnvironmentFile=-%h/.config/lyra-linuxtoys-update.env
+ExecStart=/bin/sh -c 'exec "$LINUXTOYS_CHECKOUT/scripts/auto-update-linuxtoys.sh"'
 Environment=AUTO_UPDATE_WORKDIR=%h/.cache/lyra-linuxtoys-auto-update
