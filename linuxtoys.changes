@@ -10,8 +10,9 @@ Tue Nov 17 15:32:39 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
   * fix: #1556 - chinese translation file issue
   * repo: fix links
 - Rebase linuxtoys-disable-self-update.patch: upstream moved the update
-  script into build_update_script(); the GUI dialog, TUI, CLI and
-  background/MCP updater paths stay disabled in favor of signed RPM updates.
+  script into build_update_script(), which now only prints the Lyra OS
+  notice and fails; the GUI dialog, TUI, CLI and background/MCP updater
+  paths stay disabled in favor of signed RPM updates.
 
 -------------------------------------------------------------------
 Mon Nov  2 20:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>

@@ -87,7 +87,75 @@ diff -ruN a/usr/share/linuxtoys/app/updater/update_dialog.py b/usr/share/linuxto
 diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxtoys/app/updater/update_helper.py
 --- a/usr/share/linuxtoys/app/updater/update_helper.py
 +++ b/usr/share/linuxtoys/app/updater/update_helper.py
-@@ -294,64 +294,7 @@
+@@ -206,9 +206,6 @@
+     return helper._compare_versions(current, latest) != 1, latest
+ 
+ 
+-INSTALLER_URL = "https://linux.toys/install.sh"
+-
+-
+ def is_steamos() -> bool:
+     """Whether this host is SteamOS (its installer takes the AppImage path)."""
+     try:
+@@ -239,51 +236,12 @@
+       ``library_path``.
+     - ``"tui"``: minimal pipe; the TUI terminal owns user interaction.
+     """
+-    curl_pipe = f"curl -fsSL {INSTALLER_URL} | bash"
+-
+-    if mode == "tui":
+-        return f"#!/usr/bin/env bash\n{curl_pipe}\n"
+-
+-    if is_steamos():
+-        # install.sh takes the user-level AppImage/Gear Lever update path on
+-        # SteamOS: no library pre-auth, no native package operations.
+-        script = f"#!/bin/bash\n{curl_pipe}"
+-        if mode == "terminal" and marker:
+-            script += f" && touch {marker!r}"
+-        return script + "\n"
+-
+-    if mode == "terminal":
+-        script = (
+-            "#!/bin/bash\n"
+-            'source "$SCRIPT_DIR/libs/linuxtoys.bash"\n'
+-            "sudo_rq\n"
+-            "\n"
+-            f"{curl_pipe}"
+-        )
+-        if marker:
+-            script += f" && touch {marker!r}"
+-        return script + "\n"
+-
+-    if mode == "background":
+-        if not library_path:
+-            raise ValueError("background update requires library_path")
+-        library_path = shlex.quote(library_path)
+-        return (
+-            "#!/usr/bin/env bash\n"
+-            f"source {library_path}\n"
+-            "askpass\n"
+-            "\n"
+-            # Keep install.sh in the same shell that ran askpass. In the
+-            # background updater there is no controlling TTY, so spawning a
+-            # separate `bash` via a pipe can make sudo's cached authorization
+-            # unavailable to the installer.
+-            "_lt_installer=$(mktemp \"${TMPDIR:-/tmp}/linuxtoys-installer.XXXXXX\") || exit 1\n"
+-            "trap 'rm -f -- \"$_lt_installer\"' EXIT\n"
+-            f"curl -fsSL {INSTALLER_URL} -o \"$_lt_installer\" || exit 1\n"
+-            "source \"$_lt_installer\"\n"
+-        )
+-
+-    raise ValueError(f"unknown update script mode: {mode!r}")
++    return (
++        "#!/bin/sh\n"
++        "echo 'LinuxToys is managed by Lyra OS. Install application updates "
++        "through the system updater or Zypper.' >&2\n"
++        "exit 1\n"
++    )
+ 
+ 
+ def run_background_update():
+@@ -294,64 +252,7 @@
      the user-level AppImage/Gear Lever update path. Returns
      (success, error_message).
      """
