@@ -1,8 +1,7 @@
-diff --git a/usr/share/linuxtoys/app/manifest_helper.py b/usr/share/linuxtoys/app/manifest_helper.py
-index 0e0f9e7a..a4421f66 100644
+diff -ruN a/usr/share/linuxtoys/app/manifest_helper.py b/usr/share/linuxtoys/app/manifest_helper.py
 --- a/usr/share/linuxtoys/app/manifest_helper.py
 +++ b/usr/share/linuxtoys/app/manifest_helper.py
-@@ -847,10 +847,8 @@ def run_update_check_cli(translations=None):
+@@ -984,10 +984,8 @@
                  resp = 'n'
          
          if resp == 'y':
@@ -15,30 +14,32 @@ index 0e0f9e7a..a4421f66 100644
      else:
          print("✓ It's already on the latest available version.")
      return update_available
-diff --git a/usr/share/linuxtoys/app/tui/runner_helper.py b/usr/share/linuxtoys/app/tui/runner_helper.py
-index 4762b48f..4203475e 100644
+Binary files a/usr/share/linuxtoys/app/__pycache__/manifest_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/__pycache__/manifest_helper.cpython-313.pyc differ
+Binary files a/usr/share/linuxtoys/app/tui/__pycache__/runner_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/tui/__pycache__/runner_helper.cpython-313.pyc differ
+diff -ruN a/usr/share/linuxtoys/app/tui/runner_helper.py b/usr/share/linuxtoys/app/tui/runner_helper.py
 --- a/usr/share/linuxtoys/app/tui/runner_helper.py
 +++ b/usr/share/linuxtoys/app/tui/runner_helper.py
-@@ -2537,11 +2537,9 @@ class UpdateRunnerMixin:
+@@ -2579,10 +2579,10 @@
          if not wants_update:
              return
  
 -        self._running_is_update = True
 -        self._show_terminal()
 -        terminal = self.query_one("#terminal", Terminal)
--        terminal.run_script(
--            ["bash", "-c", "curl -fsSL https://linux.toys/install.sh | bash"]
+-        terminal.run_script(["bash", "-c", build_update_script("tui")])
 +        self.notify(
 +            "LinuxToys is managed by Lyra OS. Install application updates "
 +            "through the system updater or Zypper."
-         )
++        )
  
      def _finish_update_run(self, exit_code: int | None) -> None:
-diff --git a/usr/share/linuxtoys/app/updater/update_dialog.py b/usr/share/linuxtoys/app/updater/update_dialog.py
-index 13c3b723..53966cab 100644
+         """Handle the end of the update script."""
+Binary files a/usr/share/linuxtoys/app/updater/__pycache__/update_dialog.cpython-313.pyc and b/usr/share/linuxtoys/app/updater/__pycache__/update_dialog.cpython-313.pyc differ
+Binary files a/usr/share/linuxtoys/app/updater/__pycache__/update_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/updater/__pycache__/update_helper.cpython-313.pyc differ
+diff -ruN a/usr/share/linuxtoys/app/updater/update_dialog.py b/usr/share/linuxtoys/app/updater/update_dialog.py
 --- a/usr/share/linuxtoys/app/updater/update_dialog.py
 +++ b/usr/share/linuxtoys/app/updater/update_dialog.py
-@@ -138,47 +138,11 @@ class UpdateDialog(Gtk.Dialog):
+@@ -139,39 +139,11 @@
  
      def _run_process(self):
          self.destroy()
@@ -50,19 +51,11 @@ index 13c3b723..53966cab 100644
 -                pass
 -
 -            with open("/tmp/.self_update_lt", "w") as f:
--                script_content = f"""#!/bin/bash
--if [ -r /etc/os-release ]; then
--    . /etc/os-release
--fi
--
--if [ "${{ID:-}}" != "steamos" ]; then
--    source "$SCRIPT_DIR/libs/linuxtoys.bash"
--    sudo_rq
--fi
--
--curl -fsSL https://linux.toys/install.sh | bash && touch {marker!r}
--"""
--                f.write(script_content)
+-                f.write(
+-                    build_update_script(
+-                        "terminal", marker="/tmp/.self_update_lt_complete"
+-                    )
+-                )
 -
 -            os.chmod("/tmp/.self_update_lt", 0o700)
 -            GLib.timeout_add(500, self._restart_after_update)
@@ -91,35 +84,19 @@ index 13c3b723..53966cab 100644
  
      def _on_response(self, dialog, response_id):
          if response_id == Gtk.ResponseType.OK:
-diff --git a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxtoys/app/updater/update_helper.py
-index 8ac9701b..44e6e2ca 100644
+diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxtoys/app/updater/update_helper.py
 --- a/usr/share/linuxtoys/app/updater/update_helper.py
 +++ b/usr/share/linuxtoys/app/updater/update_helper.py
-@@ -232,92 +232,7 @@ def run_background_update():
+@@ -294,64 +294,7 @@
      the user-level AppImage/Gear Lever update path. Returns
      (success, error_message).
      """
 -    env = os.environ.copy()
--    script_dir = os.environ.get("SCRIPT_DIR")
 -    env["LINUXTOYS_NONINTERACTIVE"] = "1"
 -
--    is_steamos = False
--    try:
--        with open("/etc/os-release", "r", encoding="utf-8") as os_release:
--            for line in os_release:
--                if line.startswith("ID="):
--                    os_id = line.split("=", 1)[1].strip().strip('\"\'')
--                    is_steamos = os_id == "steamos"
--                    break
--    except OSError:
--        pass
--
--    if is_steamos:
--        script = (
--            "#!/usr/bin/env bash\n"
--            "curl -fsSL https://linux.toys/install.sh | bash\n"
--        )
--    else:
+-    library_path = None
+-    if not is_steamos():
+-        script_dir = os.environ.get("SCRIPT_DIR")
 -        if not script_dir:
 -            return False, "SCRIPT_DIR environment variable is not set."
 -
@@ -127,20 +104,7 @@ index 8ac9701b..44e6e2ca 100644
 -        if not os.path.isfile(library_path):
 -            return False, f"LinuxToys shell library was not found: {library_path}"
 -
--        script = (
--            "#!/usr/bin/env bash\n"
--            f"source {shlex.quote(library_path)}\n"
--            "askpass\n"
--            "\n"
--            # Keep install.sh in the same shell that ran askpass. In the\n"
--            # background updater there is no controlling TTY, so spawning a\n"
--            # separate `bash` via a pipe can make sudo's cached authorization\n"
--            # unavailable to the installer.\n"
--            "_lt_installer=$(mktemp \"${TMPDIR:-/tmp}/linuxtoys-installer.XXXXXX\") || exit 1\n"
--            "trap 'rm -f -- \"$_lt_installer\"' EXIT\n"
--            "curl -fsSL https://linux.toys/install.sh -o \"$_lt_installer\" || exit 1\n"
--            "source \"$_lt_installer\"\n"
--        )
+-    script = build_update_script("background", library_path=library_path)
 -
 -    script_path = None
 -    try:
