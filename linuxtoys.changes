@@ -1,4 +1,20 @@
 -------------------------------------------------------------------
+Tue Nov 17 15:32:39 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.10.4:
+  * fix: #1557 - implement package manager lock guards for update flow
+  * backend: add RAM to system context on bug reports
+  * fix: #1556 - RAM detection inconsistencies
+  * fix: null character in amharic translation file
+  * backend: preload RAM size messages
+  * fix: #1556 - chinese translation file issue
+  * repo: fix links
+- Rebase linuxtoys-disable-self-update.patch: upstream moved the update
+  script into build_update_script(), which now only prints the Lyra OS
+  notice and fails; the GUI dialog, TUI, CLI and background/MCP updater
+  paths stay disabled in favor of signed RPM updates.
+
+-------------------------------------------------------------------
 Mon Nov  2 20:00:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Register LinuxToys only for RPM files and linuxtoys:// links. Drop
