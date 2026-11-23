@@ -14,8 +14,6 @@ diff -ruN a/usr/share/linuxtoys/app/manifest_helper.py b/usr/share/linuxtoys/app
      else:
          print("✓ It's already on the latest available version.")
      return update_available
-Binary files a/usr/share/linuxtoys/app/__pycache__/manifest_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/__pycache__/manifest_helper.cpython-313.pyc differ
-Binary files a/usr/share/linuxtoys/app/tui/__pycache__/runner_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/tui/__pycache__/runner_helper.cpython-313.pyc differ
 diff -ruN a/usr/share/linuxtoys/app/tui/runner_helper.py b/usr/share/linuxtoys/app/tui/runner_helper.py
 --- a/usr/share/linuxtoys/app/tui/runner_helper.py
 +++ b/usr/share/linuxtoys/app/tui/runner_helper.py
@@ -34,8 +32,6 @@ diff -ruN a/usr/share/linuxtoys/app/tui/runner_helper.py b/usr/share/linuxtoys/a
  
      def _finish_update_run(self, exit_code: int | None) -> None:
          """Handle the end of the update script."""
-Binary files a/usr/share/linuxtoys/app/updater/__pycache__/update_dialog.cpython-313.pyc and b/usr/share/linuxtoys/app/updater/__pycache__/update_dialog.cpython-313.pyc differ
-Binary files a/usr/share/linuxtoys/app/updater/__pycache__/update_helper.cpython-313.pyc and b/usr/share/linuxtoys/app/updater/__pycache__/update_helper.cpython-313.pyc differ
 diff -ruN a/usr/share/linuxtoys/app/updater/update_dialog.py b/usr/share/linuxtoys/app/updater/update_dialog.py
 --- a/usr/share/linuxtoys/app/updater/update_dialog.py
 +++ b/usr/share/linuxtoys/app/updater/update_dialog.py
@@ -97,19 +93,29 @@ diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxto
  def is_steamos() -> bool:
      """Whether this host is SteamOS (its installer takes the AppImage path)."""
      try:
-@@ -239,51 +236,12 @@
-       ``library_path``.
-     - ``"tui"``: minimal pipe; the TUI terminal owns user interaction.
+@@ -244,65 +241,12 @@
+     and ``set -o pipefail`` so a failed installer download never reports
+     success through the pipe.
      """
 -    curl_pipe = f"curl -fsSL {INSTALLER_URL} | bash"
 -
 -    if mode == "tui":
--        return f"#!/usr/bin/env bash\n{curl_pipe}\n"
+-        return (
+-            "#!/usr/bin/env bash\n"
+-            "# architectures: x86_64, aarch64\n"
+-            "set -o pipefail\n"
+-            f"{curl_pipe}\n"
+-        )
 -
 -    if is_steamos():
 -        # install.sh takes the user-level AppImage/Gear Lever update path on
 -        # SteamOS: no library pre-auth, no native package operations.
--        script = f"#!/bin/bash\n{curl_pipe}"
+-        script = (
+-            "#!/bin/bash\n"
+-            "# architectures: x86_64, aarch64\n"
+-            "set -o pipefail\n"
+-            f"{curl_pipe}"
+-        )
 -        if mode == "terminal" and marker:
 -            script += f" && touch {marker!r}"
 -        return script + "\n"
@@ -117,6 +123,8 @@ diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxto
 -    if mode == "terminal":
 -        script = (
 -            "#!/bin/bash\n"
+-            "# architectures: x86_64, aarch64\n"
+-            "set -o pipefail\n"
 -            'source "$SCRIPT_DIR/libs/linuxtoys.bash"\n'
 -            "sudo_rq\n"
 -            "\n"
@@ -132,6 +140,8 @@ diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxto
 -        library_path = shlex.quote(library_path)
 -        return (
 -            "#!/usr/bin/env bash\n"
+-            "# architectures: x86_64, aarch64\n"
+-            "set -o pipefail\n"
 -            f"source {library_path}\n"
 -            "askpass\n"
 -            "\n"
@@ -155,7 +165,7 @@ diff -ruN a/usr/share/linuxtoys/app/updater/update_helper.py b/usr/share/linuxto
  
  
  def run_background_update():
-@@ -294,64 +252,7 @@
+@@ -313,64 +257,7 @@
      the user-level AppImage/Gear Lever update path. Returns
      (success, error_message).
      """
