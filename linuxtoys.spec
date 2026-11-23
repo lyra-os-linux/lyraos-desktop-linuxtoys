@@ -1,5 +1,5 @@
 Name:           linuxtoys
-Version:        7.10.4
+Version:        7.11.6
 Release:        0
 %global debug_package %{nil}
 Summary:        Graphical collection of tools for Linux

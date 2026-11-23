@@ -1,4 +1,21 @@
 -------------------------------------------------------------------
+Mon Nov 23 11:40:00 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
+
+- Update to upstream LinuxToys 7.11.6 (7.11.1 to 7.11.6):
+  * Architecture preflight fixes for dnf, apt, AUR and package files
+    (#1574, #1576, #1578, #1579, #1581, #1582, #1583, #1584)
+  * Package manager metadata bootstrap before installs
+  * Insufficient permissions on render nodes (#1575)
+  * Skills seeker security fix and missing translations
+  * App source badge tooltips and catalog repository links
+- Pin the release tarball by SHA-256 (matches the GitHub release asset
+  digest).
+- Rebase linuxtoys-disable-self-update.patch: build_update_script()
+  gained an architectures header and pipefail upstream; it still only
+  prints the Lyra OS notice and fails, and the background updater still
+  returns the notice without running the installer.
+
+-------------------------------------------------------------------
 Tue Nov 17 15:32:39 UTC 2026 - Lyra OS Release <rodrigo@lyraos.com.br>
 
 - Update to upstream LinuxToys 7.10.4:
